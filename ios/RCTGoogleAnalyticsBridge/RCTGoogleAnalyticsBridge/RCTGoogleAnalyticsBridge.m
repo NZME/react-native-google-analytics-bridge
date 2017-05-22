@@ -40,14 +40,10 @@ RCT_EXPORT_MODULE();
 RCT_EXPORT_METHOD(getClientID:(NSString *)trackerId callback:(RCTResponseSenderBlock)callback)
 {
     id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:trackerId];
-    
+
     NSString *clientID = [tracker get:kGAIClientId];
-    
-    if (clientID && ![clientID isEqualToString:@""]){
-        callback(@[[NSNull null], clientID]);
-    }else{
-        callback(@"Unabled to get clientID", @[[NSNull null]]);
-    }
+
+    callback(@[[NSNull null], [NSString stringWithString:clientID]]);
     
 }
 
@@ -329,15 +325,15 @@ RCT_EXPORT_METHOD(setAppVersion:(NSString *)trackerId appVersion:(NSString *)app
 RCT_EXPORT_METHOD(trackCampaignFromUrl:(NSString *)trackerId urlString:(NSString *)urlString)
 {
     id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:trackerId];
-    
+
     // setCampaignParametersFromUrl: parses Google Analytics campaign ("UTM")
     // parameters from a string url into a Map that can be set on a Tracker.
     GAIDictionaryBuilder *hitParams = [[GAIDictionaryBuilder alloc] init];
-    
+
     // Set campaign data on the map, not the tracker directly because it only
     // needs to be sent once.
     [hitParams setCampaignParametersFromUrl:urlString];
-    
+
     // Campaign source is the only required campaign field. If previous call
     // did not set a campaign source, use the hostname as a referrer instead.
     NSURL *url = [NSURL URLWithString:urlString];
@@ -346,15 +342,15 @@ RCT_EXPORT_METHOD(trackCampaignFromUrl:(NSString *)trackerId urlString:(NSString
         [hitParams set:@"referrer" forKey:kGAICampaignMedium];
         [hitParams set:[url host] forKey:kGAICampaignSource];
     }
-    
+
     NSDictionary *hitParamsDict = [hitParams build];
-    
+
     // A screen name is required for a screen view.
     [tracker set:kGAIScreenName value:@"Init With Campaign"];
-    
+
     // Previous V3 SDK versions.
     // [tracker send:[[[GAIDictionaryBuilder createAppView] setAll:hitParamsDict] build]];
-    
+
     // SDK Version 3.08 and up.
     [tracker send:[[[GAIDictionaryBuilder createScreenView] setAll:hitParamsDict] build]];
 }
