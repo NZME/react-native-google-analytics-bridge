@@ -49,13 +49,21 @@ export class GoogleAnalyticsTracker {
   }
 
   /**
+   * Get the current GA client ID
+   * @param  {Function} callback callback with the client ID e.g. (err, clientID)=>{}
+   */
+  getClientID(callback){
+    GoogleAnalyticsBridge.getClientID(this.id, callback);
+  }
+
+  /**
    * Track the current screen/view
    * @param  {String} screenName The name of the current screen
    */
   trackScreenView(screenName) {
     GoogleAnalyticsBridge.trackScreenView(this.id, screenName);
   }
-  
+
   /**
    * Track the campaign from url
    * @param  {String} urlString The url of the deep link

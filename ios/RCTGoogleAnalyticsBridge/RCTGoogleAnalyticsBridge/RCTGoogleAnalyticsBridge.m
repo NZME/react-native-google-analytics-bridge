@@ -37,6 +37,21 @@ NSString *staticTrackerId;
 
 RCT_EXPORT_MODULE();
 
+RCT_EXPORT_METHOD(getClientID:(NSString *)trackerId callback:(RCTResponseSenderBlock)callback)
+{
+    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:trackerId];
+    
+    NSString *clientID = [tracker get:kGAIClientId];
+    
+    if (clientID && ![clientID isEqualToString:@""]){
+        callback(@[[NSNull null], clientID]);
+    }else{
+        callback(@"Unabled to get clientID", @[[NSNull null]]);
+    }
+    
+}
+
+
 RCT_EXPORT_METHOD(trackScreenView:(NSString *)trackerId screenName:(NSString *)screenName)
 {
     id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:trackerId];
