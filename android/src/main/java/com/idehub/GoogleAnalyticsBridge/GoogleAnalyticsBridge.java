@@ -62,7 +62,7 @@ public class GoogleAnalyticsBridge extends ReactContextBaseJavaModule {
       if (tracker != null)
       {
           String clientID = tracker.get("&cid");
-          successCallback.invoke(clientID);
+          successCallback.invoke(null, clientID);
       }
     }
 
