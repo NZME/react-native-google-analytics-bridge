@@ -15,6 +15,7 @@ import com.google.android.gms.analytics.ecommerce.ProductAction;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.facebook.react.bridge.Callback;
 
 public class GoogleAnalyticsBridge extends ReactContextBaseJavaModule {
 
@@ -52,6 +53,17 @@ public class GoogleAnalyticsBridge extends ReactContextBaseJavaModule {
         final Map<String, Object> constants = new HashMap<>();
         constants.put("nativeTrackerId", _trackingId);
         return constants;
+    }
+
+    @ReactMethod
+    public void getClientID(String trackerId, Callback successCallback) {
+
+      Tracker tracker = getTracker(trackerId);
+      if (tracker != null)
+      {
+          String clientID = tracker.get("&cid");
+          successCallback.invoke(clientID);
+      }
     }
 
     @ReactMethod
