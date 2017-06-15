@@ -68,8 +68,8 @@ export class GoogleAnalyticsTracker {
    * Track the campaign from url
    * @param  {String} urlString The url of the deep link
    */
-  trackCampaignFromUrl(urlString) {
-    GoogleAnalyticsBridge.trackCampaignFromUrl(this.id, urlString);
+  trackCampaignFromUrl(urlString, screenName) {
+    GoogleAnalyticsBridge.trackCampaignFromUrl(this.id, urlString, screenName);
   }
 
   /**

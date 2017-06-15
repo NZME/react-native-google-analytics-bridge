@@ -44,7 +44,7 @@ RCT_EXPORT_METHOD(getClientID:(NSString *)trackerId callback:(RCTResponseSenderB
     NSString *clientID = [tracker get:kGAIClientId];
 
     callback(@[[NSNull null], [NSString stringWithString:clientID]]);
-    
+
 }
 
 
@@ -322,7 +322,7 @@ RCT_EXPORT_METHOD(setAppVersion:(NSString *)trackerId appVersion:(NSString *)app
 }
 
 
-RCT_EXPORT_METHOD(trackCampaignFromUrl:(NSString *)trackerId urlString:(NSString *)urlString)
+RCT_EXPORT_METHOD(trackCampaignFromUrl:(NSString *)trackerId urlString:(NSString *)urlString screenName:(NSString *)screenName)
 {
     id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:trackerId];
 
@@ -346,7 +346,9 @@ RCT_EXPORT_METHOD(trackCampaignFromUrl:(NSString *)trackerId urlString:(NSString
     NSDictionary *hitParamsDict = [hitParams build];
 
     // A screen name is required for a screen view.
-    [tracker set:kGAIScreenName value:@"Init With Campaign"];
+    NSString *screenVal = (screenName) ? screenName : @"Init With Campaign";
+
+    [tracker set:kGAIScreenName value:screenVal];
 
     // Previous V3 SDK versions.
     // [tracker send:[[[GAIDictionaryBuilder createAppView] setAll:hitParamsDict] build]];
