@@ -440,7 +440,7 @@ public class GoogleAnalyticsBridge extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void trackCampaignFromUrl(String trackerId, String urlString, String screenName){
+    public void trackCampaignFromUrl(String trackerId, String urlString, String screenName, ReadableMap dimensionIndexValues){
         Tracker tracker = getTracker(trackerId);
 
         if (tracker != null)
@@ -453,9 +453,18 @@ public class GoogleAnalyticsBridge extends ReactContextBaseJavaModule {
             {
               tracker.setScreenName("Init With Campaign");
             }
-            tracker.send(new HitBuilders.ScreenViewBuilder()
-                                        .setCampaignParamsFromUrl(urlString)
-                                        .build());
+
+            HitBuilders.ScreenViewBuilder screenBuilder = new HitBuilders.ScreenViewBuilder();
+            ReadableMapKeySetIterator iterator = dimensionIndexValues.keySetIterator();
+            while (iterator.hasNextKey()) {
+                String dimensionIndex = iterator.nextKey();
+                String dimensionValue = dimensionIndexValues.getString(dimensionIndex);
+                screenBuilder.setCustomDimension(Integer.parseInt(dimensionIndex), dimensionValue);
+            }
+
+            tracker.send(screenBuilder.setCampaignParamsFromUrl(urlString)
+                                      .build());
+
         }
     }
 }

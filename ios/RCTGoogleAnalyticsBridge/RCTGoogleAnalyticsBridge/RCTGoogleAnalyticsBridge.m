@@ -322,7 +322,7 @@ RCT_EXPORT_METHOD(setAppVersion:(NSString *)trackerId appVersion:(NSString *)app
 }
 
 
-RCT_EXPORT_METHOD(trackCampaignFromUrl:(NSString *)trackerId urlString:(NSString *)urlString screenName:(NSString *)screenName)
+RCT_EXPORT_METHOD(trackCampaignFromUrl:(NSString *)trackerId urlString:(NSString *)urlString screenName:(NSString *)screenName dimensionIndexValues:(NSDictionary *)dimensionIndexValues)
 {
     id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:trackerId];
 
@@ -350,11 +350,16 @@ RCT_EXPORT_METHOD(trackCampaignFromUrl:(NSString *)trackerId urlString:(NSString
 
     [tracker set:kGAIScreenName value:screenVal];
 
+    GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createScreenView];
+
+    for (NSString *dimensionIndex in dimensionIndexValues)
+        [builder set:[dimensionIndexValues objectForKey:dimensionIndex] forKey:[GAIFields customDimensionForIndex:[dimensionIndex intValue]]];
+
     // Previous V3 SDK versions.
     // [tracker send:[[[GAIDictionaryBuilder createAppView] setAll:hitParamsDict] build]];
 
     // SDK Version 3.08 and up.
-    [tracker send:[[[GAIDictionaryBuilder createScreenView] setAll:hitParamsDict] build]];
+    [tracker send:[[builder setAll:hitParamsDict] build]];
 }
 
 @end
