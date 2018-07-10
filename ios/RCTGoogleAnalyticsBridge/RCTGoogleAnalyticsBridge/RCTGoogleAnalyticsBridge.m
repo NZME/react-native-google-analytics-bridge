@@ -35,6 +35,11 @@ NSString *staticTrackerId;
     return @{ @"nativeTrackerId": staticTrackerId != nil ? staticTrackerId : [NSNull null] };
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+  return YES;
+}
+
 RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(getClientID:(NSString *)trackerId callback:(RCTResponseSenderBlock)callback)
